@@ -36,7 +36,7 @@ public:
     void set_table(std::vector<int> table);
     void build();
 
-    int minimum();
+    int minimal();
     int extract_minimal();
     int decrease_key(int key, int value);
     void insert(int key);

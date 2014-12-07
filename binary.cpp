@@ -14,8 +14,18 @@ BinaryHeap::BinaryHeap() : table(1), heap_size(0) {
 }
 
 
+std::vector<int> BinaryHeap::get_table(){
+    return table;
+}
+
+
+void BinaryHeap::set_table(std::vector<int> table){
+    this->table = table;
+}
+
+
 void BinaryHeap::print(){
-    for(int i=1; i<=heap_size; i++){
+    for(int i=1; i<=heap_size; ++i) {
         std::cout << table[i] << " ";
     }
     std::cout << std::endl;
@@ -23,7 +33,7 @@ void BinaryHeap::print(){
 
 
 void BinaryHeap::print_table(){
-    for(int i=1; i<=table.size(); i++){
+    for(int i=1; i<=table.size(); ++i) {
         std::cout << table[i] << " ";
     }
     std::cout << std::endl;
@@ -55,26 +65,26 @@ int BinaryHeap::length(){
 
     @param elem - int to be iserted.
 */
-void BinaryHeap::insert_table(int elem){
+void BinaryHeap::insert_table(int elem) {
     table.push_back(elem);
     heap_size += 1;
 }
 
 
-void BinaryHeap::heapify(int i){
+void BinaryHeap::heapify(int i) {
     int l, r, smallest;
     l = left(i);
     r = right(i);
-    if ( l <= heap_size && table[l] < table[i] ){
+    if ( l <= heap_size && table[l] < table[i] ) {
         smallest = l;
     }
     else {
         smallest = i;
     }
-    if ( r <= heap_size && table[r] < table[smallest] ){
+    if ( r <= heap_size && table[r] < table[smallest] ) {
         smallest = r;
     }
-    if ( smallest != i ){
+    if ( smallest != i ) {
         int pom;
         pom = table[i];
         table[i] = table[smallest];
@@ -84,20 +94,23 @@ void BinaryHeap::heapify(int i){
 }
 
 
-void BinaryHeap::build(){
+void BinaryHeap::build() {
     heap_size = table.size() - 1;
-    for(int i=(table.size()-1)/2; i>=1; i--){
+    for(int i=(table.size()-1)/2; i>=1; --i) {
         heapify(i);
     }
 }
 
 
-int BinaryHeap::minimum(){
+int BinaryHeap::minimal() {
+    if ( heap_size < 1 ) {
+        return -1; // error heap is empty
+    }
     return table[1];
 }
 
 
-int BinaryHeap::extract_minimal(){
+int BinaryHeap::extract_minimal() {
     int min;
     if ( heap_size < 1 ){
         return -1; // error heap is empty
@@ -111,8 +124,8 @@ int BinaryHeap::extract_minimal(){
 
 
 int BinaryHeap::delete_key(int key){
-    if ( heap_size < 1 ){
-        return -1; // error heap is empty
+    if ( heap_size < key ){
+        return -1; // error heap to small
     }
     table[key] = table[heap_size];
     heap_size -= 1;
@@ -123,14 +136,14 @@ int BinaryHeap::delete_key(int key){
 
 int BinaryHeap::decrease_key(int key, int value){
     int pom;
-    if ( key > heap_size ){
-        return -1; // too big i
+    if ( key > heap_size ) {
+        return -1; // too big key
     }
     if ( value > table[key] ) {
         return -2; // value is bigger than actual
     }
     table[key] = value;
-    while ( key > 1 && table[parent(key)] > table[key] ){
+    while ( key > 1 && table[parent(key)] > table[key] ) {
         pom = table[key];
         table[key] = table[parent(key)];
         table[parent(key)] = pom;
@@ -142,25 +155,12 @@ int BinaryHeap::decrease_key(int key, int value){
 
 void BinaryHeap::insert(int key){
     heap_size += 1;
-    if ( heap_size > (table.size() - 1) ){
+    if ( heap_size > (table.size() - 1) )
         table.push_back(std::numeric_limits<int>::max());
-    }
-    else{
+    else
         table[heap_size] = std::numeric_limits<int>::max();
-    }
     decrease_key(heap_size, key);
 }
-
-
-std::vector<int> BinaryHeap::get_table(){
-    return table;
-}
-
-
-void BinaryHeap::set_table(std::vector<int> table){
-    this->table = table;
-}
-
 
 
 BinaryHeap* bin_union(BinaryHeap *h1, BinaryHeap *h2){
@@ -174,5 +174,3 @@ BinaryHeap* bin_union(BinaryHeap *h1, BinaryHeap *h2){
     new_h->build();
     return new_h;
 }
-
-

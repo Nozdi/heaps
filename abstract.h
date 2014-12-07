@@ -16,6 +16,7 @@ public:
     virtual void print() = 0;
     virtual void insert(int key) = 0;
     virtual int extract_minimal() = 0;
+    virtual int minimal() = 0;
     virtual int decrease_key(int key, int value) = 0;
     virtual int delete_key(int key) = 0;
 };

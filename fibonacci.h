@@ -10,6 +10,7 @@
 #define FIBONACCI_H
 
 #include "node.h"
+#include "abstract.h"
 #include <iostream>
 #include <cstddef>
 #include <cmath>

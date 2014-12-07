@@ -1,2 +1,4 @@
-heaps
+Heaps
 =====
+
+Binary & fibonacci

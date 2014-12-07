@@ -14,19 +14,19 @@
 using namespace std;
 
 
-int get_heap(vector<AbstractHeap*> heaps){
+int get_heap(vector<AbstractHeap*> heaps) {
     int choice;
     if ( heaps.size() < 1 ) {
-        cout << "Create heap first!";
+        cout << "Create heap first!" << endl;
         return -1;
     }
+    if ( heaps.size() == 1) return 1;
     while(true){
         cout << "Choose heap: " << endl;
         cout << "1.."<< heaps.size() << endl;
         cin >> choice;
-        if (choice > 0 && choice <= heaps.size()){
+        if (choice > 0 && choice <= heaps.size())
             break;
-        }
     }
     return choice;
 }
@@ -60,16 +60,21 @@ int main(void){
         cout << "1 - make heap" << endl;
         cout << "2 - insert element" << endl;
         cout << "3 - extract min" << endl;
-        cout << "4 - decrease node by key" << endl;
-        cout << "5 - union heaps" << endl;
-        cout << "6 - display heap" << endl;
-        cout << "7 - exit" << endl;
+        cout << "4 - min" << endl;
+        cout << "5 - decrease node by key" << endl;
+        cout << "6 - union heaps" << endl;
+        cout << "7 - delete" << endl;
+        cout << "8 - display heap" << endl;
+        cout << "9 - exit" << endl;
+
         cin >> option;
+
         switch(option){
             case 1: {
-                if ( type == 1){
+                if ( type == 1 ){
                     heaps.push_back(new BinaryHeap);
                 }else{
+                    heaps.push_back(new FibonacciHeap);
                 }
                 break;
             }case 2: {
@@ -88,9 +93,24 @@ int main(void){
             }case 3: {
                 no = get_heap(heaps);
                 if ( no < 0 ) break;
-                cout << heaps[no-1]->extract_minimal();
+                int min = heaps[no-1]->extract_minimal();
+                if ( min < 0 ){
+                    cout << "Heap too small!" << endl;
+                    break;
+                }
+                cout << "Min: " << min << endl;
                 break;
-            }case 4: {
+            }case 4:{
+                no = get_heap(heaps);
+                if ( no < 0 ) break;
+                int minimal = heaps[no-1]->minimal();
+                if ( minimal < 0 ){
+                    cout << "Heap too small!" << endl;
+                    break;
+                }
+                cout << "Min: " << minimal << endl;
+                break;
+            }case 5: {
                 no = get_heap(heaps);
                 if ( no < 0 ) break;
 
@@ -99,9 +119,18 @@ int main(void){
                 cin >> k;
                 cout << "What: ";
                 cin >> v;
-                heaps[no-1]->decrease_key(k, v);
+                int local_status = heaps[no-1]->decrease_key(k, v);
+                if ( local_status == -1 ){
+                    cout << "There is no such a key in heap!" << endl;
+                }else if ( local_status == -1 ){
+                    cout << "New value is bigger than acutal" << endl;
+                }
                 break;
-            }case 5: {
+            }case 6: {
+                if ( heaps.size() == 1 ){
+                    cout << "U need at least 2 heaps to make union" << endl;
+                    break;
+                }
                 cout << "First: " << endl;
                 first = get_heap(heaps);
                 if (first < 0 ) break;
@@ -112,31 +141,48 @@ int main(void){
                     cout << "Error! Cannot union same heaps";
                 }
                 else{
-                    if (type == 1){
-                        // Deletes the second element (vec[1])
+                    AbstractHeap *new_heap;
 
-                        BinaryHeap *new_heap = bin_union(
+                    if (type == 1){
+                        new_heap = bin_union(
                             (BinaryHeap*)heaps[first-1],
                             (BinaryHeap*)heaps[sec-1]
                         );
-                        if (first > sec){
-                            heaps.erase(heaps.begin() + (first-1));
-                            heaps.erase(heaps.begin() + (sec-1));
-                        } else{
-                            heaps.erase(heaps.begin() + (sec-1));
-                            heaps.erase(heaps.begin() + (first-1));
-                        }
-                        heaps.push_back(new_heap);
-                        cout << "New heap is on: " << heaps.size() << " position" << endl;
+                    }else {
+                        new_heap = fib_union(
+                            (FibonacciHeap*)heaps[first-1],
+                            (FibonacciHeap*)heaps[sec-1]
+                        );
                     }
+
+                    if (first > sec){
+                        heaps.erase(heaps.begin() + (first-1));
+                        heaps.erase(heaps.begin() + (sec-1));
+                    } else {
+                        heaps.erase(heaps.begin() + (sec-1));
+                        heaps.erase(heaps.begin() + (first-1));
+                    }
+
+                    heaps.push_back(new_heap);
+                    cout << "New heap is on: " << heaps.size() << " position" << endl;
                 }
                 break;
-            }case 6: {
+            }case 7:{
+                no = get_heap(heaps);
+                if ( no < 0 ) break;
+                cout << "For binary index for fib value: ";
+                int value;
+                cin >> value;
+                int local_status = heaps[no-1]->delete_key(value);
+                if ( local_status == -1 )
+                    cout << "Error! There is not such an element in heap!" << endl;
+                break;
+            }case 8: {
                 no = get_heap(heaps);
                 if ( no < 0 ) break;
                 heaps[no-1]->print();
                 break;
-            }case 7: {
+            }case 9: {
                 exit(0);
             }default: {
                 cout << "Wrong choice" << endl;

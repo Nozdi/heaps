@@ -64,7 +64,7 @@ Node* find_node(int key,  Node* start){
                 return pom;
              }
         }
-        iterator=iterator->left;
-    } while (iterator != start);
+        iterator = iterator->left;
+    } while ( iterator != start );
     return NULL;
 }
