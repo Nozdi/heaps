@@ -50,13 +50,14 @@ std::vector<Node*> print_helper(Node *start){
     std::vector<Node*> children;
     if ( start != NULL ) {
         Node *pom = start;
-        int i=0;
         do {
-            std::cout << " "<< pom->key << " ";
+            std::cout << " "<< pom->key;
+            if (pom->marked == true)
+                std::cout << "m ";
+            else
+                std::cout << " ";
             children.push_back(pom->child);
-            pom = pom->left;
-            i++;
-            if ( i ==10) break;
+            pom = pom->right;
         } while ( pom != start );
     }
     return children;
@@ -76,7 +77,7 @@ void FibonacciHeap::print(){
     std::vector<Node*> start, middle, append;
     start = print_helper(min);
     std::cout << std::endl;
-    while (start.size() > 0 && children(start)) {
+    while ( start.size() > 0 && children(start) ) {
         middle.clear();
         for(int i=0; i<start.size(); i++){
             std::cout << "|";
@@ -122,6 +123,7 @@ int FibonacciHeap::extract_minimal(){
         if ( pom != NULL) {
             do {
                 Node *current = pom;
+                current->parent = NULL;
                 pom = pom->left;
                 insert_left(min, current);
             } while ( pom != min->child );
@@ -136,15 +138,19 @@ int FibonacciHeap::extract_minimal(){
             consolidate();
         }
         n -= 1;
+        int key = z->key;
+        delete z;
+        return key;
     }
-    int key = z->key;
-    delete z;
-    return key;
+    return -1; // heap too small
 }
 
 
 void FibonacciHeap::heap_link(Node *y, Node *x){
-    remove_node(y);
+    int status = remove_node(y);
+    if ( status == -1 )
+        (y->parent)->child = NULL;
+
     insert_child(x, y);
     x->degree += 1;
     y->marked = false;
@@ -167,17 +173,17 @@ void FibonacciHeap::consolidate(){
         x = w;
         w = w->right;
         d = x->degree;
-        while ( tab[d] != NULL ) {
+        while ( tab[d] != NULL && tab[d] != x ) {
             y = tab[d];
             if ( x->key > y->key ) {
                 swaper = x;
                 x = y;
                 y = swaper;
             }
-            if ( y == last )
-                last = x;
             if ( w == y )
                 w=w->right;
+            if ( y == last )
+                last = x;
             heap_link(y, x);
             tab[d] = NULL;
             d += 1;
@@ -191,6 +197,7 @@ void FibonacciHeap::consolidate(){
                 min = tab[i];
                 min->left = min;
                 min->right = min;
+                min->parent = NULL;
             }
             else {
                 insert_left(min, tab[i]);

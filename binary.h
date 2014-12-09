@@ -23,6 +23,7 @@ class BinaryHeap : public AbstractHeap {
 
 public:
     BinaryHeap();
+    ~BinaryHeap(){};
 
     void print();
 

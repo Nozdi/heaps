@@ -18,7 +18,7 @@ int remove_node(Node *to_remove){
     right_node->left = left_node;
 
     // removed last one
-    if (left_node == to_remove ){
+    if ( left_node == to_remove ){
         return -1;
     }
     return 0;
@@ -41,13 +41,13 @@ Node* concatenate_lists(Node *l1, Node *l2){
 
 void insert_child(Node *x, Node *child){
     if ( x->child == NULL ){
-        x->child = child;
         child->left = child;
         child->right = child;
     }
-    else{
+    else
         insert_left(x->child, child);
-    }
+
+    x->child = child;
     child->parent = x;
 }
 

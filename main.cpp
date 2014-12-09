@@ -14,7 +14,13 @@
 using namespace std;
 
 
+int char_to_int(char c){
+    return (int)c - 48;
+}
+
+
 int get_heap(vector<AbstractHeap*> heaps) {
+    char input;
     int choice;
     if ( heaps.size() < 1 ) {
         cout << "Create heap first!" << endl;
@@ -24,7 +30,8 @@ int get_heap(vector<AbstractHeap*> heaps) {
     while(true){
         cout << "Choose heap: " << endl;
         cout << "1.."<< heaps.size() << endl;
-        cin >> choice;
+        cin >> input;
+        choice = char_to_int(input);
         if (choice > 0 && choice <= heaps.size())
             break;
     }
@@ -34,19 +41,21 @@ int get_heap(vector<AbstractHeap*> heaps) {
 
 int main(void){
     int type;
+    char input;
     bool choosen = false;
     while(!choosen){
-        cout << "Choose heap type:" << endl;
+        cout << "Choose priority queue type:" << endl;
         cout << "1 - binary heap" << endl;
         cout << "2 - fibonacci heap" << endl;
         cout << "3 - exit" << endl;
-        cin >> type;
+        cin >> input;
+        type = char_to_int(input);
         switch(type){
             case 1: case 2:
                 choosen = true;
                 break;
             case 3:
-                exit(0);
+                return 0;
             default:
                 cout << "Wrong choice" << endl;
                 break;
@@ -67,7 +76,8 @@ int main(void){
         cout << "8 - display heap" << endl;
         cout << "9 - exit" << endl;
 
-        cin >> option;
+        cin >> input;
+        option = char_to_int(input);
 
         switch(option){
             case 1: {
@@ -81,13 +91,13 @@ int main(void){
                 int l;
                 no = get_heap(heaps);
                 if ( no < 0 ) break;
-                cout << "Natural number to insert: ";
+                cout << "Positive integer to insert: ";
                 cin >> l;
                 if (l > 0 ){
                     heaps[no-1]->insert(l);
                 }
                 else {
-                    cout << "Natural must be > 0" << endl;
+                    cout << "Positive integer must be > 0" << endl;
                 }
                 break;
             }case 3: {
@@ -115,7 +125,7 @@ int main(void){
                 if ( no < 0 ) break;
 
                 int k, v;
-                cout << "Where: ";
+                cout << "Where (table id (binary) or key value (fib): ";
                 cin >> k;
                 cout << "What: ";
                 cin >> v;
@@ -183,7 +193,7 @@ int main(void){
                 heaps[no-1]->print();
                 break;
             }case 9: {
-                exit(0);
+                return 0;
             }default: {
                 cout << "Wrong choice" << endl;
                 break;

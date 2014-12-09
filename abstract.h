@@ -12,7 +12,7 @@
 class AbstractHeap {
 
 public:
-    virtual ~AbstractHeap();
+    virtual ~AbstractHeap(){};
     virtual void print() = 0;
     virtual void insert(int key) = 0;
     virtual int extract_minimal() = 0;
@@ -21,6 +21,5 @@ public:
     virtual int delete_key(int key) = 0;
 };
 
-inline AbstractHeap::~AbstractHeap() { }
 
 #endif //ABSTRACT_H
